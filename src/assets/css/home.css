@@ -1,0 +1,32 @@
+.home-page {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(0, 213, 255, 1) 84%,
+    rgba(0, 142, 255, 1) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.dashboard-img {
+  width: 500px;
+  height: auto;
+  aspect-ratio: 1703 / 1008;
+  border-radius: 20px;
+}
+
+.signup-btn {
+  background-color: var(--blue);
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: var(--black);
+  text-decoration: none;
+  transition: 200ms;
+}
+
+.signup-btn:hover {
+  background-color: var(--blue-hover);
+}
