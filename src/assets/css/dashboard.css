@@ -161,6 +161,8 @@
   align-items: center;
   white-space: nowrap;
   overflow: hidden;
+  color: var(--black);
+  text-decoration: none !important;
 }
 
 .time span {
@@ -185,6 +187,8 @@
   flex-direction: column;
   gap: 10px;
   border: 1px solid var(--grey);
+  color: var(--black);
+  text-decoration: none !important;
 }
 
 .post {
@@ -200,6 +204,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--black);
+  text-decoration: none !important;
 }
 
 .title-container {

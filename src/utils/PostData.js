@@ -1,4 +1,5 @@
 export function PostData(type, userData, authentication = null) {
+
     let BaseURL = 'https://localhost/social-media-manager/api/';
 
     return new Promise((resolve, reject) => {

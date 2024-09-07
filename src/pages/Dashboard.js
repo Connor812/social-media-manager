@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "swiper/swiper-bundle.css";
 import '../assets/css/dashboard.css';
 import SocialMediaCard from "../components/SocialMediaCard";
@@ -23,18 +23,33 @@ function Home() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { date, month, year } = useParams();
 
     const userData = JSON.parse(sessionStorage.getItem('userData'));
     const userId = userData?.id;
 
     useEffect(() => {
+        if (date && month && year) {
+            const selectedDate = new Date(year, month - 1, date);
+            setCurrentDate(selectedDate);
+            setSelectedDate({ date, month, year });
+        } else {
+            setSelectedDate({
+                date: new Date().getDate(),
+                month: new Date().getMonth() + 1,
+                year: new Date().getFullYear()
+            });
+        }
+    }, [date, month, year]);
+
+    useEffect(() => {
         generateDays(currentDate.getFullYear(), currentDate.getMonth());
         fetchPostsForMonth(currentDate.getFullYear(), currentDate.getMonth());
+        scrollToSpecificDay(currentDate);
     }, [currentDate]);
 
     const generateDays = (year, month) => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'long' });
         const newDays = [];
 
         for (let i = 1; i <= daysInMonth; i++) {
@@ -43,7 +58,7 @@ function Home() {
             newDays.push({
                 dayName,
                 dateNumber: i,
-                month: monthName,
+                month: date.toLocaleDateString('en-US', { month: 'long' }),
                 id: `day-${i}`,
                 year: year
             });
@@ -109,15 +124,19 @@ function Home() {
     };
 
     const handlePrevMonth = () => {
-        const prevMonth = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
-        setCurrentDate(prevMonth);
-        scrollToBeginning();
+        setCurrentDate(prevDate => {
+            const newDate = new Date(prevDate);
+            newDate.setMonth(prevDate.getMonth() - 1);
+            return newDate;
+        });
     };
 
     const handleNextMonth = () => {
-        const nextMonth = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
-        setCurrentDate(nextMonth);
-        scrollToBeginning();
+        setCurrentDate(prevDate => {
+            const newDate = new Date(prevDate);
+            newDate.setMonth(prevDate.getMonth() + 1);
+            return newDate;
+        });
     };
 
     const scrollToBeginning = () => {
@@ -125,32 +144,22 @@ function Home() {
     };
 
     const scrollToSpecificDay = (date) => {
-        const dayElement = document.getElementById(`day-${date.getDate()}`);
-        if (dayElement) {
-            calendarContainerRef.current.scrollTo({
-                left: dayElement.offsetLeft - calendarContainerRef.current.offsetLeft,
-                behavior: 'smooth'
-            });
-        }
+        setTimeout(() => {
+            const dayElement = document.getElementById(`day-${date.getDate()}`);
+            if (dayElement) {
+                calendarContainerRef.current.scrollTo({
+                    left: dayElement.offsetLeft - calendarContainerRef.current.offsetLeft,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
     };
 
     const handleToday = () => {
         const today = new Date();
-        const isSameMonth = today.getMonth() === currentDate.getMonth() && today.getFullYear() === currentDate.getFullYear();
-
-        if (!isSameMonth) {
-            setCurrentDate(today);
-        } else {
-            scrollToSpecificDay(today);
-        }
-
-        // Delay scrolling to the specific day after the date is updated
-        setTimeout(() => {
-            scrollToSpecificDay(today);
-        }, 100);
+        setCurrentDate(today);
+        scrollToSpecificDay(today);
     };
-
-
 
     const handleDateChange = (e) => {
         const selectedDate = new Date(e.target.value);
@@ -204,19 +213,21 @@ function Home() {
                         <Spinner></Spinner>
                     </div>
                 ) : (
-                    days.map((day) => (
-                        <SocialMediaCard
-                            key={day.id}
-                            day={day.dayName}
-                            date={day.dateNumber}
-                            month={day.month}
-                            year={currentDate.getFullYear()}
-                            id={day.id}
-                            handleShow={handleShow}
-                            setSelectedDate={setSelectedDate}
-                            posts={posts}
-                        />
-                    ))
+                    days.map((day) => {
+                        return (
+                            <SocialMediaCard
+                                key={day.id}
+                                day={day.dayName}
+                                date={day.dateNumber}
+                                month={day.month}
+                                year={currentDate.getFullYear()}
+                                id={day.id}
+                                handleShow={handleShow}
+                                setSelectedDate={setSelectedDate}
+                                posts={posts}
+                            />
+                        )
+                    })
                 )}
             </section>
             <Modal show={show} onHide={() => handleClose()} centered>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Placeholder from "../assets/images/thumbnail-placeholder.png";
 // icons
 import { FaInstagramSquare } from "react-icons/fa"; // Instagram
@@ -12,8 +13,11 @@ import { TbLink } from "react-icons/tb"; // Link
 import { IoMdImage } from "react-icons/io"; // Image
 
 function SocialMediaCard({ day, date, month, year, id, handleShow, setSelectedDate, posts }) {
+    console.log(month);
+
     const providedDate = new Date(`${month} ${date}, ${year}`);
     const currentDate = new Date();
+
     const isPast = providedDate < currentDate;
     const filteredPosts = posts.filter(post =>
         post.date === date && post.month === month && post.year === year
@@ -25,6 +29,10 @@ function SocialMediaCard({ day, date, month, year, id, handleShow, setSelectedDa
         setSelectedDate({ date, month, year });
         handleShow(true);
     };
+
+    const sortedPosts = filteredPosts.slice().sort((a, b) => {
+        return new Date(a.time) - new Date(b.time);
+    });
 
     return (
         <div id={id} className={`social-media-card ${isPast ? 'passed' : ''}`}>
@@ -45,8 +53,8 @@ function SocialMediaCard({ day, date, month, year, id, handleShow, setSelectedDa
                 </div>
             </div>
             <div className="posts">
-                {filteredPosts.length > 0 ? (
-                    filteredPosts.map(post => (
+                {sortedPosts.length > 0 ? (
+                    sortedPosts.map(post => (
                         <div key={post.id} className="post">
                             <div className="title-container">
                                 {post.type === 'facebook' && <FaFacebookSquare className="social-media-icon facebook" />}
@@ -54,7 +62,7 @@ function SocialMediaCard({ day, date, month, year, id, handleShow, setSelectedDa
                                 {post.type === 'twitter' && <RiTwitterXLine className="social-media-icon twitter" />}
                                 {post.type === 'youtube' && <FaYoutube className="social-media-icon youtube" />}
                                 {post.type === 'tiktok' && <AiFillTikTok className="social-media-icon tiktok" />}
-                                <span className="post-title">{post.title}</span>
+                                <Link to={`/display_post/${post.id}`} className="post-title">{post.title}</Link>
                             </div>
                             <div className="time">
                                 <strong>{post.time}</strong>

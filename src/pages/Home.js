@@ -7,11 +7,11 @@ function Home() {
     return (
         <main className="home-page">
 
-            <section>
-                <h1 className="text-start">
+            <section className="content-wrapper">
+                <h1 className="text-start mb-5">
                     Welcome To The Social Media Manager
                 </h1>
-                <div className="d-flex gap-3">
+                <div className="d-flex gap-5">
                     <img src={DashbaordImg} className="dashboard-img" alt="The Social Media Manger Dashboard" />
                     <div>
 

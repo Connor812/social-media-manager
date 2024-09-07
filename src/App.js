@@ -8,11 +8,9 @@ import Dashboard from './pages/Dashboard.js';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Post from './pages/Post.js';
-import Facebook from './pages/Facebook';
-import Twitter from './pages/Twitter';
-import Tiktok from './pages/Tiktok';
-import Youtube from './pages/Youtube';
 import Header from './components/Header';
+import Calendar from './pages/Calendar.js';
+import DisplayPost from './pages/DisplayPost.js';
 
 import './assets/css/main.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -39,7 +37,10 @@ function AppContent() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signup/:error" element={<Signup />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route path="/dashboard/:date/:month/:year" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/post/:date/:month/:year/:type" element={<ProtectedRoute element={<Post />} />} />
+        <Route path="/calendar" element={<ProtectedRoute element={<Calendar />} />} />
+        <Route path="/display_post/:post" element={<ProtectedRoute element={<DisplayPost />} />} />
       </Routes>
     </>
   );

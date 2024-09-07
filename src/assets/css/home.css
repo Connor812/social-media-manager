@@ -11,6 +11,10 @@
   padding: 30px;
 }
 
+.content-wrapper {
+  max-width: 1300px;
+}
+
 .dashboard-img {
   width: 500px;
   height: auto;

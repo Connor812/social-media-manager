@@ -1,0 +1,59 @@
+.description-container {
+  background-color: var(--white);
+  border: 1px solid var(--black);
+  border-radius: 20px;
+  padding: 10px;
+  position: relative;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+}
+
+.copy-btn svg {
+  fill: var(--black);
+  width: 20px;
+  height: 20px;
+  transition: 200ms;
+}
+
+.copy-btn svg:hover {
+  fill: var(--blue);
+}
+
+.display-post-description {
+  max-height: 500px;
+  overflow: scroll;
+}
+
+.copy-hashtag-btn {
+  background: none;
+  border: none;
+}
+
+.copy-hashtag-btn svg {
+  fill: var(--black);
+  width: 20px;
+  height: 20px;
+  transition: 200ms;
+}
+
+.copy-hashtag-btn svg:hover {
+  fill: var(--blue);
+}
+
+.back-btn {
+  background-color: var(--blue);
+  width: 100px;
+  padding: 10px 20px;
+  text-align: center;
+  color: var(--black);
+  text-decoration: none;
+  border-radius: 20px;
+  transition: 200ms;
+}
+
+.back-btn:hover {
+  background-color: var(--blue-hover);
+}
