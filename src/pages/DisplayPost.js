@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { Spinner } from "react-bootstrap";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -30,10 +31,11 @@ function DisplayPost() {
             .then((result) => {
                 if (!result.status) {
                     setError(result.message);
+                    setLoading(false);
                     return;
                 }
 
-                const data = result.data[0];
+                const data = result.data;
                 setPostData(data);
 
                 // Fetch related files, hashtags, and URLs if present
@@ -94,7 +96,19 @@ function DisplayPost() {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <main className="d-flex align-items-center justify-content-center">
+                <Spinner></Spinner>
+            </main>
+        );
+    }
+
+    if (error) {
+        return (
+            <main className="d-flex align-items-center justify-content-center">
+                <Alert variant="danger">{error}</Alert>
+            </main>
+        );
     }
 
     return (
