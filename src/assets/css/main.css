@@ -9,6 +9,9 @@
   --grey: #a6a6a6c3;
   --green: #72c900;
   --passed: #d6d6d6;
+  --small-font-size: 12px;
+  --medium-font-size: 16px;
+  --large-font-size: 20px;
 }
 
 body {

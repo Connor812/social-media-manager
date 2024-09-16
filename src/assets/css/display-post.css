@@ -1,6 +1,6 @@
 .description-container {
   background-color: var(--white);
-  border: 1px solid var(--black);
+  border: 1px solid var(--blue);
   border-radius: 20px;
   padding: 10px;
   position: relative;
@@ -45,15 +45,68 @@
 
 .back-btn {
   background-color: var(--blue);
-  width: 100px;
+  width: auto;
   padding: 10px 20px;
   text-align: center;
   color: var(--black);
   text-decoration: none;
   border-radius: 20px;
   transition: 200ms;
+  border: none;
 }
 
 .back-btn:hover {
   background-color: var(--blue-hover);
+}
+
+.post-posted {
+  background-color: var(--green) !important;
+  background: var(--green) !important;
+}
+
+.display-select-platform-btn-container {
+  padding: 10px;
+}
+
+.display-select-platform-btn {
+  display: inline-block;
+  width: 100%;
+  height: 50px;
+  border: none;
+  transition: 200ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  flex: 1;
+  padding: 3px;
+  margin-bottom: 15px;
+}
+
+.display-hashtag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.display-hashtag-list .hashtag {
+  background-color: #e0e0e0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.note-textarea {
+  width: 100%;
+  flex: 1;
+  border: none;
+  border-radius: 0 0 10px 10px !important;
+}
+
+.save-not-btn {
+  background: none;
+  color: var(--light-grey);
+  border: none;
+  font-size: var(--large-font-size);
 }

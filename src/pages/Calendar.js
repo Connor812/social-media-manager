@@ -33,9 +33,9 @@ function Calendar() {
         <div>
             {/* Year selector */}
             <header style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-                <button onClick={() => handleYearChange(-1)}>&lt; Previous Year</button>
+                <button className="back-btn" onClick={() => handleYearChange(-1)}>&lt; Previous Year</button>
                 <h2>{currentYear}</h2>
-                <button onClick={() => handleYearChange(1)}>Next Year &gt;</button>
+                <button className="back-btn" onClick={() => handleYearChange(1)}>Next Year &gt;</button>
             </header>
 
             {/* Scrollable calendar */}

@@ -258,18 +258,27 @@
   border: none;
   border-radius: 20px;
   transition: 200ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  flex: 1;
+  padding: 3px;
 }
 
-.select-platform-btn .icon {
+.select-platform-btn .icon,
+.display-select-platform-btn .icon {
   width: 30px;
   height: 30px;
 }
 
-.select-platform-btn .icon.instagram {
+.select-platform-btn .icon.instagram,
+.display-select-platform-btn .icon.instagram {
   fill: white;
 }
 
-.select-platform-btn.instagram {
+.select-platform-btn.instagram,
+.display-select-platform-btn.instagram {
   background: linear-gradient(
     135deg,
     rgba(249, 206, 52, 1) 0%,
@@ -278,7 +287,8 @@
   );
 }
 
-.select-platform-btn.instagram:hover {
+.select-platform-btn.instagram:hover,
+.display-select-platform-btn.instagram:hover {
   background: linear-gradient(
     135deg,
     rgba(231, 193, 57, 1) 0%,
@@ -287,51 +297,63 @@
   );
 }
 
-.select-platform-btn .icon.twitter {
+.select-platform-btn .icon.twitter,
+.display-select-platform-btn .icon.twitter {
   fill: white;
 }
 
-.select-platform-btn.twitter {
+.select-platform-btn.twitter,
+.display-select-platform-btn.twitter {
   background-color: black;
 }
 
-.select-platform-btn.twitter:hover {
+.select-platform-btn.twitter:hover,
+.display-select-platform-btn.twitter:hover {
   background-color: rgb(49, 49, 49);
 }
 
-.select-platform-btn .icon.tiktok {
+.select-platform-btn .icon.tiktok,
+.display-select-platform-btn .icon.tiktok {
   fill: white;
 }
 
-.select-platform-btn.tiktok {
+.select-platform-btn.tiktok,
+.display-select-platform-btn.tiktok {
   background-color: black;
 }
 
-.select-platform-btn.tiktok:hover {
+.select-platform-btn.tiktok:hover,
+.display-select-platform-btn.tiktok:hover {
   background-color: rgb(49, 49, 49);
 }
 
-.select-platform-btn .icon.facebook {
+.select-platform-btn .icon.facebook,
+.display-select-platform-btn .icon.facebook {
   fill: white;
 }
 
-.select-platform-btn.facebook {
+.select-platform-btn.facebook,
+.display-select-platform-btn.facebook {
   background-color: #1877f2;
 }
 
-.select-platform-btn.facebook:hover {
+.select-platform-btn.facebook:hover,
+.display-select-platform-btn.facebook:hover {
   background-color: #1267d5;
 }
 
-.select-platform-btn .icon.youtube {
+.select-platform-btn .icon.youtube,
+.display-select-platform-btn .icon.youtube {
   fill: white;
 }
 
-.select-platform-btn.youtube {
+.select-platform-btn.youtube,
+.display-select-platform-btn.youtube {
   background-color: #ff0000;
 }
 
-.select-platform-btn.youtube:hover {
+.select-platform-btn.youtube:hover,
+.display-select-platform-btn.youtube:hover {
   background-color: #e60000;
 }
 /* # Icons ---------------------------------------------------------> */

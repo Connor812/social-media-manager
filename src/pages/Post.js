@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { UploadFilesAndData } from "../utils/PostData";
+import { PostData, UploadFilesAndData } from "../utils/PostData";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-import { Alert } from "react-bootstrap";
+import { Alert, Modal, Button, Row, Col } from "react-bootstrap";
 import Placeholder from "../assets/images/instagram-placeholder.png";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -21,12 +21,19 @@ function Instagram() {
     const [urls, setUrls] = useState([]);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [loadingHashtags, setLoadingHashtags] = useState(true);
     const imageInput = useRef(null);
     const title = useRef(null);
     const description = useRef(null);
     const thumbnailInput = useRef(null);
     const { date, month, year, type } = useParams();
     const [timeValue, setTimeValue] = useState(new Date());
+    const [usersHashtags, setUsersHashtags] = useState([]);
+    const [userHashtagGroup, setUserHashtagGroup] = useState([]);
+    const [show, setShow] = useState(false);
+
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
 
     // Convert month name to number
     const monthNameToNumber = (monthName) => {
@@ -36,6 +43,19 @@ function Instagram() {
         ];
         return months.indexOf(monthName) + 1;
     };
+
+    useEffect(() => {
+        PostData("get-hashtags.php", {}, sessionStorage.getItem("userData"))
+            .then((result) => {
+                if (result.status) {
+                    setUsersHashtags(result.data);
+                    setLoadingHashtags(false);
+                }
+            }).catch((error) => {
+                console.error("Error:", error);
+                setLoadingHashtags(false);
+            });
+    }, []);
 
     // Initialize the date based on URL parameters
     useEffect(() => {
@@ -168,6 +188,19 @@ function Instagram() {
             });
     };
 
+    const handleHashtagChange = (e, hashtag) => {
+        if (e.target.checked) {
+            // Add hashtag if checked and not already in the list
+            if (!hashtags.includes(hashtag)) {
+                setHashtags((prevHashtags) => [...prevHashtags, hashtag]);
+            }
+        } else {
+            // Remove hashtag if unchecked
+            setHashtags((prevHashtags) =>
+                prevHashtags.filter((existingHashtag) => existingHashtag !== hashtag)
+            );
+        }
+    };
 
     return (
         <main className="instagram-post">
@@ -178,13 +211,11 @@ function Instagram() {
                 {success && <Alert variant="success">{success}</Alert>}
                 <div className="d-flex gap-3">
                     <div className="w-100">
-                        <label htmlFor="post-title">Post Title</label>
-                        <input type="text" id="post-title" placeholder="Enter post title" ref={title} />
+                        <input className="post-input" type="text" id="post-title" placeholder="Enter post title" ref={title} />
                     </div>
                     <div className="w-100 d-flex flex-column">
-                        <label htmlFor="time">Select Time</label>
                         <DatePicker
-                            className="w-100"
+                            className="w-100 post-input"
                             selected={timeValue}
                             onChange={(date) => setTimeValue(date)}
                             showTimeSelect
@@ -197,94 +228,11 @@ function Instagram() {
                         />
                     </div>
                 </div>
-                <label htmlFor="description">Post Description</label>
-                <textarea id="description" rows="5" placeholder="Enter post description" ref={description} ></textarea>
+                <textarea className="post-input" id="description" rows="5" placeholder="Enter post description" ref={description} ></textarea>
 
-                <h4>Media Preview</h4>
-                <div className="media-preview">
-                    <div>
-                        <label htmlFor="thumbnail">Upload A Thumbnail</label>
-                        <br />
-                        <input
-                            id="thumbnail"
-                            type="file"
-                            accept="image/*, video/*"
-                            multiple
-                            onInput={handleUploadThumbnail}
-                            ref={thumbnailInput}
-                            className="mb-2"
-                        />
-                        <div className="w-100 d-flex justify-content-center position-relative">
-                            <div className="display-instagram-uploads thumbnail">
-                                {thumbnail ?
-                                    <div>
-                                        {thumbnail.type.startsWith("image/") ?
-                                            <img src={URL.createObjectURL(thumbnail)} alt={thumbnail.name} />
-                                            : thumbnail.type.startsWith("video/") ?
-                                                <video controls>
-                                                    <source src={URL.createObjectURL(thumbnail)} type={thumbnail.type} />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                                : <p>Unsupported media type</p>
-                                        }
-                                    </div>
-                                    : (
-                                        <div>
-                                            <img src={Placeholder} alt="placeholder" />
-                                        </div>
-                                    )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="uploads">Upload Content (Images / Videos)</label>
-                        <br />
-                        <input
-                            id="uploads" uploads
-                            type="file"
-                            accept="image/*, video/*"
-                            multiple
-                            onInput={handleUploads}
-                            ref={imageInput}
-                            className="mb-2"
-                        />
-                        <div className="w-100 d-flex justify-content-center position-relative">
-                            <Swiper
-                                className="mySwiper display-instagram-uploads"
-                                modules={[Navigation, Pagination]}
-                                navigation
-                                pagination={{ clickable: true }}
-                                slidesPerView={1}
-                            >
-                                {uploadedFiles.length > 0 ? (
-                                    uploadedFiles.map((file, index) => (
-                                        <SwiperSlide key={index} className="instagram-slide">
-                                            {file.type.startsWith("image/") ? (
-                                                <img src={URL.createObjectURL(file)} alt={file.name} />
-                                            ) : file.type.startsWith("video/") ? (
-                                                <video controls>
-                                                    <source src={URL.createObjectURL(file)} type={file.type} />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            ) : (
-                                                <p>Unsupported media type</p>
-                                            )}
-                                        </SwiperSlide>
-                                    ))
-                                ) : (
-                                    <SwiperSlide>
-                                        <img src={Placeholder} alt="Placeholder" />
-                                    </SwiperSlide>
-                                )}
-                            </Swiper>
-                        </div>
-                    </div>
-                </div>
-
-                <label htmlFor="hashtags">Add Hashtags</label>
-                <div className="hashtag-input d-flex">
+                <div className="post-input-container">
                     <input
+                        className="post-input"
                         type="text"
                         id="hashtags"
                         value={hashtagInput}
@@ -292,8 +240,8 @@ function Instagram() {
                         onKeyDown={handleKeyPress}
                         placeholder="Enter hashtag"
                     />
-                    <button type="button" onClick={addHashtag} className="add-hashtag-button">
-                        +
+                    <button type="button" className="add-hashtag-button" onClick={handleShow}>
+                        Hashtags
                     </button>
                 </div>
 
@@ -312,9 +260,9 @@ function Instagram() {
                     ))}
                 </div>
 
-                <label htmlFor="urls">Add URLs</label>
-                <div className="url-input d-flex align-items-center">
+                <div className="post-input-container">
                     <input
+                        className="post-input"
                         type="text"
                         id="urls"
                         value={urlInput}
@@ -327,8 +275,8 @@ function Instagram() {
                         }}
                         placeholder="Enter URL"
                     />
-                    <button type="button" onClick={addUrl} className="add-url-button">
-                        +
+                    <button type="button" className="add-hashtag-button" onClick={handleShow}>
+                        Urls
                     </button>
                 </div>
 
@@ -347,10 +295,144 @@ function Instagram() {
                     ))}
                 </div>
 
+
+
+
+                <Row className="p-4">
+                    <Col className="p-2" sm={12} md={6}>
+                        <div className="post-card-container">
+                            <div className="post-header">
+                                <label htmlFor="thumbnail">
+                                    Upload Thumbnail (Image / Video)
+                                </label>
+                                <input
+                                    id="thumbnail"
+                                    type="file"
+                                    accept="image/*, video/*"
+                                    multiple
+                                    onInput={handleUploadThumbnail}
+                                    ref={thumbnailInput}
+                                    className="mb-2 post-header"
+                                />
+                            </div>
+                            <div className="w-100 d-flex justify-content-center position-relative">
+                                <div className="display-instagram-uploads thumbnail">
+                                    {thumbnail ?
+                                        <div>
+                                            {thumbnail.type.startsWith("image/") ?
+                                                <img src={URL.createObjectURL(thumbnail)} alt={thumbnail.name} />
+                                                : thumbnail.type.startsWith("video/") ?
+                                                    <video controls>
+                                                        <source src={URL.createObjectURL(thumbnail)} type={thumbnail.type} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                    : <p>Unsupported media type</p>
+                                            }
+                                        </div>
+                                        : (
+                                            <div>
+                                                <img src={Placeholder} alt="placeholder" />
+                                            </div>
+                                        )}
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col className="p-2" sm={12} md={6}>
+                        <div className="post-card-container">
+                            <div className="post-header">
+                                <label htmlFor="uploads">Upload Content (Images / Videos)</label>
+                                <input
+                                    id="uploads" uploads
+                                    type="file"
+                                    accept="image/*, video/*"
+                                    multiple
+                                    onInput={handleUploads}
+                                    ref={imageInput}
+                                    className="mb-2"
+                                />
+                            </div>
+                            <div className="w-100 d-flex justify-content-center position-relative">
+                                <Swiper
+                                    className="mySwiper display-instagram-uploads"
+                                    modules={[Navigation, Pagination]}
+                                    navigation
+                                    pagination={{ clickable: true }}
+                                    slidesPerView={1}
+                                >
+                                    {uploadedFiles.length > 0 ? (
+                                        uploadedFiles.map((file, index) => (
+                                            <SwiperSlide key={index} className="instagram-slide">
+                                                {file.type.startsWith("image/") ? (
+                                                    <img src={URL.createObjectURL(file)} alt={file.name} />
+                                                ) : file.type.startsWith("video/") ? (
+                                                    <video controls>
+                                                        <source src={URL.createObjectURL(file)} type={file.type} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                ) : (
+                                                    <p>Unsupported media type</p>
+                                                )}
+                                            </SwiperSlide>
+                                        ))
+                                    ) : (
+                                        <SwiperSlide>
+                                            <img src={Placeholder} alt="Placeholder" />
+                                        </SwiperSlide>
+                                    )}
+                                </Swiper>
+                            </div>
+                        </div>
+                    </Col>
+
+                </Row>
+
                 <button type="submit" className="save-button" onClick={handleFormSubmit}>Save Post</button>
             </div>
+
+            <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Select Hashtags</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {loadingHashtags ? (
+                        "Loading hashtags..."
+                    ) : (
+                        <div>
+                            <div>
+                                <label htmlFor="">Hashtag groups</label>
+
+                            </div>
+
+                            <div className="hashtag-list">
+                                {usersHashtags.map((hashtagObj, index) => (
+                                    <div key={index} className="form-check display-users-hashtags">
+                                        <input
+                                            type="checkbox"
+                                            id={`hashtag-${index}`}
+                                            value={hashtagObj.hashtag}
+                                            checked={hashtags.includes(hashtagObj.hashtag)} // Compare without the `#`
+                                            onChange={(e) => handleHashtagChange(e, hashtagObj.hashtag)} // Handle change
+                                        />
+                                        <label className="form-check-label" htmlFor={`hashtag-${index}`}>
+                                            {hashtagObj.hashtag}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </main>
     );
 }
+
 
 export default Instagram;

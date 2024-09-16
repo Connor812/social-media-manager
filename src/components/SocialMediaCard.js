@@ -8,12 +8,8 @@ import { RiTwitterXLine } from "react-icons/ri"; // Twitter
 import { FaYoutube } from "react-icons/fa"; // Youtube
 import { AiFillTikTok } from "react-icons/ai"; // TikTok
 import { IoIosCheckmarkCircle } from "react-icons/io"; // Checkmark
-import { FaVideo } from "react-icons/fa"; // Video
-import { TbLink } from "react-icons/tb"; // Link
-import { IoMdImage } from "react-icons/io"; // Image
 
 function SocialMediaCard({ day, date, month, year, id, handleShow, setSelectedDate, posts }) {
-    console.log(month);
 
     const providedDate = new Date(`${month} ${date}, ${year}`);
     const currentDate = new Date();
